@@ -119,11 +119,11 @@ luci-app-chatgpt 在OPENWRT上实现ChatGPT项目，基于OpenAI API
 
 ## 界面
 
-![screenshots](https://raw.githubusercontent.com/sirpdboy/openwrt/master/doc/chatgpt1.jpg)
+![screenshots](https://raw.githubusercontent.com/sirpdboy/openwrt/master/doc/chatgpt1.png)
 
-![screenshots](https://raw.githubusercontent.com/sirpdboy/openwrt/master/doc/chatgpt2.jpg)
+![screenshots](https://raw.githubusercontent.com/sirpdboy/openwrt/master/doc/chatgpt2.png)
 
-![screenshots](https://raw.githubusercontent.com/sirpdboy/openwrt/master/doc/chatgpt3.jpg)
+![screenshots](https://raw.githubusercontent.com/sirpdboy/openwrt/master/doc/chatgpt3.png)
 
 
 ## 使用与授权相关说明
