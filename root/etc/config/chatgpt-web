@@ -1,0 +1,6 @@
+config basic
+	option apiHost 'https://api.openai.com/'
+	option modelver 'gpt-3.5-turbo'
+	option userpic 'girl.jpg'
+	option apiKey ''
+        option systemrole ''
