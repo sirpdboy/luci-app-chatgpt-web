@@ -12,7 +12,9 @@ s.anonymous = true
 
 o = s:option(ListValue,"modelver",translate("GPT Model"))
 o:value("gpt-3.5-turbo",translate("gpt-3.5"))
+o:value("gpt-3.5-turbo-16k",translate("gpt-3.5-turbo-16k"))
 o:value("gpt-4",translate("gpt-4"))
+o:value("gpt-4-browsing",translate("gpt-4-browsing"))
 o:value("gpt-4-32k",translate("gpt-4-32k"))
 o.default="gpt-3.5-turbo"
 o.rmempty = true
@@ -33,14 +35,18 @@ o:value("cartoongirl2.jpg",translate("cartoongirl2"))
 o.rmempty = true
 o.default="girl.jpg"
 
+o=s:option(TextValue, "systemrole" ,translate("Character Settings"))
+o.description = translate("Specify what role the system plays")
+o.rows = 3
+o.rmempty=false
+
 o = s:option(Value,"apiHost",translate("OpenAI interface"))
 o.description = translate("")
 o.rmempty = true
 o.default="https://api.openai.com/"
 
 o = s:option(Value, "apikey", translate("API Key"))
-o.description = translate("Enter your own API key, and if you do not have one, enter the official website API to generate it: ")..translate("<a href=\'https://platform.openai.com/account/api-keys' target=\'_blank\'>Click to open</a>")
+o.description = translate("Enter your own API key, and if you do not have one, enter the official website API to generate it: ")..translate("<a href=\'https://platform.openai.com/account/api-keys\' target=\'_blank\'>Click to open</a>")
 o.rmempty = true
 o.password = true
-
 return m

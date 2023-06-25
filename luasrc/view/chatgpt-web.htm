@@ -3,15 +3,14 @@
  Licensed to the public under the Apache License 2.0.
 -%>
 <%
+local fs = require "nixio.fs"
 local dsp=require"luci.dispatcher"
 local uci=luci.model.uci.cursor()
-local e = {}
-if fs.access('/etc/config/chatgpt-web') then
-   apihosts = uci:get_first('chatgpt-web', 'basic', 'apiHost')
-   apikeys = uci:get_first('chatgpt-web', 'basic', 'apikey')
-   modelver = uci:get_first('chatgpt-web', 'basic', 'modelver')
-   userpic = "/luci-static/chatgpt-web/user/" .. uci:get_first('chatgpt-web', 'basic', 'userpic')
-end
+local apihosts = uci:get_first('chatgpt-web', 'basic', 'apiHost')
+local apikeys = uci:get_first('chatgpt-web', 'basic', 'apikey')
+local modelver = uci:get_first('chatgpt-web', 'basic', 'modelver')
+local userpic = "/luci-static/chatgpt-web/user/" .. uci:get_first('chatgpt-web', 'basic', 'userpic')
+local sysrole = uci:get_first('chatgpt-web', 'basic', 'systemrole')
 
 -%>
 
@@ -274,23 +273,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                     </div>
                     <div id="convOption">
 
-                    <div>
-                        <div class="justSetLine presetSelect">
-                            <div>系统角色</div>
-                            <div>
-                                <label for="preSetSystem">预设角色</label>
-                                <select id="preSetSystem">
-                                    <option value="">默认</option>
-                                    <option value="normal">助手</option>
-                                    <option value="cat">猫娘</option>
-                                    <option value="emoji">表情</option>
-                                    <option value="image">有图</option>
-                                </select>
-                            </div>
-                        </div>
-                        <textarea class="inputTextClass areaTextClass" placeholder="你是一个乐于助人的助手，尽量简明扼要地回答"
-                            id="systemInput"></textarea>
-                    </div>
+
                     <div>
                         <span>角色性格</span>
                             <input type="range" id="top_p" min="0" max="1" value="0.7" step="0.05" />
@@ -329,6 +312,27 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                             <label for="enableLongReply" class="switch-slide-label"></label>
                         </label>
                     </div>
+                    <div class="setDetail inputDetail apiDetail">
+                        <div id="checkBillBtn" class="loaded">
+                            <span>查询API额度</span>
+                            <svg style="margin:0 auto;height:34px;width:100%;">
+                                <use xlink:href="#loadingIcon"></use>
+                            </svg>
+                        </div>
+                    </div>
+                <div class="setContent" id="quotaContent" style="display: none;">
+                    <div class="setTitle" id="quotaTitle">免费额度</div>
+                    <div class="setDetail">
+                        <div class="progressBar">
+                            <div class="nowProgress" id="usedQuotaBar"></div>
+                        </div>
+                        <div class="progressDetail">
+                            <div><span>已用 </span><span id="usedQuota"></span></div>
+                            <div><span>可用 </span><span id="availableQuota"></span></div>
+                        </div>
+                    </div>
+                </div>
+
                 </div>
                 <div id="speechOption" style="display: none;">
                     <div class="presetSelect presetModelCls">
@@ -491,7 +495,9 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
             </div>
             <div class="sysTitle">设置</div>
             <div class="sysDetail">
-				
+               
+
+
                 <div class="setContent">
                     <div class="setTitle">会话</div>
                     <div class="setDetail dataDetail">
@@ -601,7 +607,6 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
         const settingEle = document.getElementById("setting");
         const dialogEle = document.getElementById("setDialog");
 
-        const systemEle = document.getElementById("systemInput");
         const speechServiceEle = document.getElementById("preSetService");
         const newChatEle = document.getElementById("newChat");
         const folderListEle = document.getElementById("folderList");
@@ -916,7 +921,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                     if (azureTokenTimer) {
                         clearInterval(azureTokenTimer);
                     }
-					
+                    checkAzureAbort = new AbortController();
                     setTimeout(() => {
                         if (checkAzureAbort && !checkAzureAbort.signal.aborted) {
                             checkAzureAbort.abort();
@@ -1447,6 +1452,37 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
             }
             if (usedData > totalQuota) usedData = totalQuota;
             return [totalQuota, usedData, isSubsrcibed, expired];
+        }
+		
+        let checkingBill = false;
+        checkBillBtn.onclick = async () => {
+            if (checkingBill) return;
+            checkingBill = true;
+            checkBillBtn.className = "loading";
+            quotaContent.style.display = "none";
+            try {
+                let res = await checkBill();
+                if (!res) throw new Error("API error");
+                let [total, used, isSub, exp] = res;
+                usedQuotaBar.style.width = (used / total * 100).toFixed(2) + "%";
+                usedQuotaBar.parentElement.classList.remove("expiredBar");
+                usedQuota.textContent = "$" + parseFloat(used.toFixed(2));
+                let remain = total - used;
+                availableQuota.textContent = "$" + Math.floor(remain * 100) / 100;
+                if (isSub) {
+                    quotaTitle.textContent = "本月额度";
+                } else {
+                    let isExpired = new Date() > exp;
+                    if (isExpired) usedQuotaBar.parentElement.classList.add("expiredBar");
+                    let accessDate = formatDate(exp);
+                    quotaTitle.innerHTML = "免费额度-有效期至：" + `<span style="color: ${isExpired ? "#e15b64" : "#99c959"} ">${accessDate}</span>`;
+                }
+                quotaContent.style.display = "block";
+            } catch (e) {
+                notyf.error("API密钥错误或失效，请检查API密钥！");
+            }
+            checkingBill = false;
+            checkBillBtn.className = "loaded";
         }
 		
         const checkStorage = () => {
@@ -2180,11 +2216,9 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
             }
             if (data[0] && data[0].role === "system") {
                 systemRole = data[0].content;
-                systemEle.value = systemRole;
                 localStorage.setItem("system", systemRole);
             } else {
                 systemRole = "";
-                systemEle.value = "";
                 localStorage.setItem("system", systemRole);
             }
             chatlog.innerHTML = "";
@@ -2412,7 +2446,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                 activeChat(chatListEle.firstElementChild);
             }
         };
-        let localSetKeys = ['system', 'temp', 'top_p', 'textSpeed', 'enableCont', 'enableLongReply', 'existVoice', 'azureRegion', 'azureKey', 'enableContVoice', 'enableAutoVoice', 'voiceRecLang', 'pinNav', 'voice0', 'voicePitch0', 'voiceVolume0', 'voiceRate0', 'azureRole0', 'azureStyle0', 'voice1', 'voicePitch1', 'voiceVolume1', 'voiceRate1', 'azureRole1', 'azureStyle1'];
+        let localSetKeys = ['modelVersion', 'system', 'temp', 'top_p', 'textSpeed', 'enableCont', 'enableLongReply', 'existVoice', 'azureRegion', 'azureKey', 'enableContVoice', 'enableAutoVoice', 'voiceRecLang', 'pinNav', 'voice0', 'voicePitch0', 'voiceVolume0', 'voiceRate0', 'azureRole0', 'azureStyle0', 'voice1', 'voicePitch1', 'voiceVolume1', 'voiceRate1', 'azureRole1', 'azureStyle1'];
         document.getElementById("exportSet").onclick = () => {
             let data = {}
             for (let i = 0; i < localSetKeys.length; i++) {
@@ -2474,48 +2508,6 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
         }
         const initSetting = (force = false) => {
 
-            let localSystem = localStorage.getItem("system");
-            systemEle.onchange = () => {
-                systemRole = systemEle.value;
-                localStorage.setItem("system", systemRole);
-                if (systemRole) {
-                    if (data[0] && data[0].role === "system") {
-                        data[0].content = systemRole;
-                    } else {
-                        data.unshift({role: "system", content: systemRole});
-                        processIdx(1);
-                    }
-                } else if (data[0] && data[0].role === "system") {
-                    data.shift();
-                    processIdx(-1);
-                }
-                updateChats();
-            }
-            if (systemRole === void 0) {
-                if (localSystem) {
-                    systemRole = localSystem;
-                    systemEle.value = localSystem;
-                    data.unshift({role: "system", content: systemRole});
-                    processIdx(1);
-                    updateChats();
-                } else {
-                    systemRole = systemEle.value;
-                }
-            } else if (force) {
-                systemRole = systemEle.value = localSystem || systemEle.getAttribute("value") || "";
-                systemEle.dispatchEvent(new Event("change"));
-            }
-            const preEle = document.getElementById("preSetSystem");
-            preEle.onchange = () => {
-                let val = preEle.value;
-                if (val && presetRoleData[val]) {
-                    systemEle.value = presetRoleData[val];
-                } else {
-                    systemEle.value = "";
-                }
-                systemEle.dispatchEvent(new Event("change"));
-                systemEle.focus();
-            }
             const topEle = document.getElementById("top_p");
             let localTop = localStorage.getItem("top_p");
             topEle.value = roleNature = parseFloat(localTop || topEle.getAttribute("value"));
@@ -3102,7 +3094,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
             if (isRefresh) {
                 currentResEle = chatlog.children[systemRole ? refreshIdx - 1 : refreshIdx];
             } else if (!currentResEle) {
-                currentResEle = createConvEle("response");
+                currentResEle = createConvEle("response", true, modelVersion);
                 currentResEle.children[1].innerHTML = "<br />";
                 currentResEle.dataset.loading = true;
                 scrollToBottom();
@@ -3129,6 +3121,12 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                 if (systemRole) {dataSlice.unshift(data[0]);}
             }
             try {
+                dataSlice = dataSlice.map(item => {
+                    if (item.role === "assistant") return {role: item.role, content: item.content};
+                    else return item;
+                })
+                let headers = {"Content-Type": "application/json"};
+                if (customAPIKey) headers["Authorization"] = "Bearer " + customAPIKey;
 			
                 const res = await fetch(apiHost + API_URL, {
                     method: "POST",
@@ -3215,7 +3213,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                                 if (longReplyFlag) return streamGen(true);
                             } else {
                                 if (long) {data[data.length - 1].content = progressData}
-                                else {data.push({role: "assistant", content: progressData})}
+                                else {data.push({role: "assistant", content: progressData, model: modelVersion})}
                                 if (longReplyFlag) return streamGen(true);
                             }
                             stopLoading(false);
@@ -3245,7 +3243,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                 if (delayId) clearTimeout(delayId);
                 if (refreshIdx !== void 0) {data[refreshIdx].content = progressData}
                 else if (data[data.length - 1].role === "assistant") {data[data.length - 1].content = progressData}
-                else {data.push({role: "assistant", content: progressData})}
+                else {data.push({role: "assistant", content: progressData, model: modelVersion})}
                 if (existVoice && enableAutoVoice && currentVoiceIdx === autoVoiceDataIdx && progressData.length) {
                     let voiceText = progressData.slice(autoVoiceIdx);
                     autoSpeechEvent(voiceText, currentResEle, false, true);
@@ -3278,8 +3276,8 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                         if (currentVoiceIdx !== void 0) {
                             if (currentVoiceIdx > idx) {currentVoiceIdx++}
                         }
-                        data.splice(idx + 1, 0, {role: "assistant", content: ""});
-                        chatlog.insertBefore(createConvEle("response", false), chatlog.children[eleIdx + 1]);
+                        data.splice(idx + 1, 0, {role: "assistant", content: "", model: modelVersion});
+                        chatlog.insertBefore(createConvEle("response", false, modelVersion), chatlog.children[eleIdx + 1]);
                     }
                     chatlog.children[eleIdx + 1].children[1].innerHTML = "<br />";
                     chatlog.children[eleIdx + 1].dataset.loading = true;
@@ -3342,26 +3340,6 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
     <link href="/luci-static/chatgpt-web/katex.min.css" rel="stylesheet">
     <link href="/luci-static/chatgpt-web/texmath.css" rel="stylesheet">
 
-    <script defer>
-        const downRoleController = new AbortController();
-        setTimeout(() => {
-            downRoleController.abort();
-        }, 10000);
-        const preEle = document.getElementById("preSetSystem");
-        fetch("/luci-static/chatgpt-web/prompts-zh0.json", {
-            signal: downRoleController.signal
-        }).then(async (response) => {
-            let res = await response.json();
-            for (let i = 0; i < res.length; i++) {
-                let key = "act" + i;
-                presetRoleData[key] = res[i].prompt.trim();
-                let optionEle = document.createElement("option");
-                optionEle.text = res[i].act;
-                optionEle.value = key;
-                preEle.options.add(optionEle);
-            }
-        }).catch(e => { })
-    </script>
 </body>
 
 </div>
