@@ -35,9 +35,8 @@ o:value("cartoongirl2.jpg",translate("cartoongirl2"))
 o.rmempty = true
 o.default="girl.jpg"
 
-o=s:option(TextValue, "systemrole" ,translate("Character Settings"))
-o.description = translate("Specify what role the system plays")
-o.rows = 3
+o=s:option(TextValue, "systemrole" ,translate("Default Role Settings"))
+o.rows = 2
 o.rmempty=false
 
 o = s:option(Value,"apiHost",translate("OpenAI interface"))
@@ -49,4 +48,5 @@ o = s:option(Value, "apikey", translate("API Key"))
 o.description = translate("Enter your own API key, and if you do not have one, enter the official website API to generate it: ")..translate("<a href=\'https://platform.openai.com/account/api-keys\' target=\'_blank\'>Click to open</a>")
 o.rmempty = true
 o.password = true
+
 return m

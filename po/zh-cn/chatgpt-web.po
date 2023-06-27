@@ -59,22 +59,13 @@ msgid "API Key"
 msgstr "API密钥"
 
 msgid "Enter your own API key, and if you do not have one, enter the official website API to generate it:"
-msgstr "输入自己的API密钥，没有的进官网API生成："
+msgstr "输入自己的API密钥(sk-开头)，没有的进官网API生成："
 
 msgid "<a href=\'https://platform.openai.com/account/api-keys\' target=\'_blank\'>Click to open</a>"
 msgstr "<a href=\'https://platform.openai.com/account/api-keys\' target=\'_blank\'>点击前往</a>"
 
-msgid "Character Settings"
-msgstr "角色设定"
+msgid "Default Role Settings"
+msgstr "默认角色设置"
 
 msgid "</br>For specific usage, see:"
 msgstr "</br>具体使用方法参见："
-
-msgid "Specify what role the system plays"
-msgstr "指定系统扮演何种角色"
-
-msgid "You are a helpful professional assistant, try to answer as concisely as possible"
-msgstr "你是一个乐于助人的专业助手，尽量简明扼要地回答"
-
-
-

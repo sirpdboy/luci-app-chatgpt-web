@@ -53,11 +53,11 @@ local sysrole = uci:get_first('chatgpt-web', 'basic', 'systemrole')
                     d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z">
                 </path>
             </symbol>
-            <symbol viewBox="0 0 16 16" id="pauseVoiceIcon">
-                <path stroke="currentColor" stroke-width="2" d="M5 2v12M11 2v12"></path>
+            <symbol viewBox="0 0 20 20" id="pauseVoiceIcon">
+                <path stroke="currentColor" stroke-width="2.4" d="M6 3v14M14 3v14"></path>
             </symbol>
             <symbol viewBox="0 0 16 16" id="resumeVoiceIcon">
-                <path fill="currentColor" d="M4 2L4 14L12 8Z"></path>
+                <path fill="currentColor" d="M4 3L4 13L12 8Z"></path>
             </symbol>
             <symbol viewBox="0 0 24 24" id="stopResIcon">
                 <path fill="currentColor"
@@ -171,6 +171,9 @@ local sysrole = uci:get_first('chatgpt-web', 'basic', 'systemrole')
                 </path>
                 <circle fill="currentColor" cx="12" cy="12" r="3.5"></circle>
             </symbol>
+			<symbol viewBox="0 0 24 24" id="stopIcon">
+                <path fill="currentColor" d="M6 5h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" />
+            </symbol>
                 <symbol viewBox="0 0 41 41" id="aiIcon">
                     <path fill="white" stroke-width="1.5"
                         d="M37.5324 16.8707C37.9808 15.5241 38.1363 14.0974 37.9886 12.6859C37.8409 11.2744 37.3934 9.91076 36.676 8.68622C35.6126 6.83404 33.9882 5.3676 32.0373 4.4985C30.0864 3.62941 27.9098 3.40259 25.8215 3.85078C24.8796 2.7893 23.7219 1.94125 22.4257 1.36341C21.1295 0.785575 19.7249 0.491269 18.3058 0.500197C16.1708 0.495044 14.0893 1.16803 12.3614 2.42214C10.6335 3.67624 9.34853 5.44666 8.6917 7.47815C7.30085 7.76286 5.98686 8.3414 4.8377 9.17505C3.68854 10.0087 2.73073 11.0782 2.02839 12.312C0.956464 14.1591 0.498905 16.2988 0.721698 18.4228C0.944492 20.5467 1.83612 22.5449 3.268 24.1293C2.81966 25.4759 2.66413 26.9026 2.81182 28.3141C2.95951 29.7256 3.40701 31.0892 4.12437 32.3138C5.18791 34.1659 6.8123 35.6322 8.76321 36.5013C10.7141 37.3704 12.8907 37.5973 14.9789 37.1492C15.9208 38.2107 17.0786 39.0587 18.3747 39.6366C19.6709 40.2144 21.0755 40.5087 22.4946 40.4998C24.6307 40.5054 26.7133 39.8321 28.4418 38.5772C30.1704 37.3223 31.4556 35.5506 32.1119 33.5179C33.5027 33.2332 34.8167 32.6547 35.9659 31.821C37.115 30.9874 38.0728 29.9178 38.7752 28.684C39.8458 26.8371 40.3023 24.6979 40.0789 22.5748C39.8556 20.4517 38.9639 18.4544 37.5324 16.8707ZM22.4978 37.8849C20.7443 37.8874 19.0459 37.2733 17.6994 36.1501C17.7601 36.117 17.8666 36.0586 17.936 36.0161L25.9004 31.4156C26.1003 31.3019 26.2663 31.137 26.3813 30.9378C26.4964 30.7386 26.5563 30.5124 26.5549 30.2825V19.0542L29.9213 20.998C29.9389 21.0068 29.9541 21.0198 29.9656 21.0359C29.977 21.052 29.9842 21.0707 29.9867 21.0902V30.3889C29.9842 32.375 29.1946 34.2791 27.7909 35.6841C26.3872 37.0892 24.4838 37.8806 22.4978 37.8849ZM6.39227 31.0064C5.51397 29.4888 5.19742 27.7107 5.49804 25.9832C5.55718 26.0187 5.66048 26.0818 5.73461 26.1244L13.699 30.7248C13.8975 30.8408 14.1233 30.902 14.3532 30.902C14.583 30.902 14.8088 30.8408 15.0073 30.7248L24.731 25.1103V28.9979C24.7321 29.0177 24.7283 29.0376 24.7199 29.0556C24.7115 29.0736 24.6988 29.0893 24.6829 29.1012L16.6317 33.7497C14.9096 34.7416 12.8643 35.0097 10.9447 34.4954C9.02506 33.9811 7.38785 32.7263 6.39227 31.0064ZM4.29707 13.6194C5.17156 12.0998 6.55279 10.9364 8.19885 10.3327C8.19885 10.4013 8.19491 10.5228 8.19491 10.6071V19.808C8.19351 20.0378 8.25334 20.2638 8.36823 20.4629C8.48312 20.6619 8.64893 20.8267 8.84863 20.9404L18.5723 26.5542L15.206 28.4979C15.1894 28.5089 15.1703 28.5155 15.1505 28.5173C15.1307 28.5191 15.1107 28.516 15.0924 28.5082L7.04046 23.8557C5.32135 22.8601 4.06716 21.2235 3.55289 19.3046C3.03862 17.3858 3.30624 15.3413 4.29707 13.6194ZM31.955 20.0556L22.2312 14.4411L25.5976 12.4981C25.6142 12.4872 25.6333 12.4805 25.6531 12.4787C25.6729 12.4769 25.6928 12.4801 25.7111 12.4879L33.7631 17.1364C34.9967 17.849 36.0017 18.8982 36.6606 20.1613C37.3194 21.4244 37.6047 22.849 37.4832 24.2684C37.3617 25.6878 36.8382 27.0432 35.9743 28.1759C35.1103 29.3086 33.9415 30.1717 32.6047 30.6641C32.6047 30.5947 32.6047 30.4733 32.6047 30.3889V21.188C32.6066 20.9586 32.5474 20.7328 32.4332 20.5338C32.319 20.3348 32.154 20.1698 31.955 20.0556ZM35.3055 15.0128C35.2464 14.9765 35.1431 14.9142 35.069 14.8717L27.1045 10.2712C26.906 10.1554 26.6803 10.0943 26.4504 10.0943C26.2206 10.0943 25.9948 10.1554 25.7963 10.2712L16.0726 15.8858V11.9982C16.0715 11.9783 16.0753 11.9585 16.0837 11.9405C16.0921 11.9225 16.1048 11.9068 16.1207 11.8949L24.1719 7.25025C25.4053 6.53903 26.8158 6.19376 28.2383 6.25482C29.6608 6.31589 31.0364 6.78077 32.2044 7.59508C33.3723 8.40939 34.2842 9.53945 34.8334 10.8531C35.3826 12.1667 35.5464 13.6095 35.3055 15.0128ZM14.2424 21.9419L10.8752 19.9981C10.8576 19.9893 10.8423 19.9763 10.8309 19.9602C10.8195 19.9441 10.8122 19.9254 10.8098 19.9058V10.6071C10.8107 9.18295 11.2173 7.78848 11.9819 6.58696C12.7466 5.38544 13.8377 4.42659 15.1275 3.82264C16.4173 3.21869 17.8524 2.99464 19.2649 3.1767C20.6775 3.35876 22.0089 3.93941 23.1034 4.85067C23.0427 4.88379 22.937 4.94215 22.8668 4.98473L14.9024 9.58517C14.7025 9.69878 14.5366 9.86356 14.4215 10.0626C14.3065 10.2616 14.2466 10.4877 14.2479 10.7175L14.2424 21.9419ZM16.071 17.9991L20.4018 15.4978L24.7325 17.9975V22.9985
@@ -273,7 +276,22 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                     </div>
                     <div id="convOption">
 
-
+                    <div>
+                        <div class="justSetLine presetSelect">
+                            <div>系统角色</div>
+                            <div>
+                                <label for="preSetSystem">预设角色</label>
+                                <select id="preSetSystem">
+                                    <option value="">默认</option>
+                                    <option value="normal">助手</option>
+                                    <option value="cat">猫娘</option>
+                                    <option value="emoji">表情</option>
+                                    <option value="image">有图</option>
+                                </select>
+                            </div>
+                        </div>
+                        <textarea class="inputTextClass areaTextClass" placeholder="<%=sysrole%>" value="<%=sysrole%>" id="systemInput"></textarea>
+                    </div>
                     <div>
                         <span>角色性格</span>
                             <input type="range" id="top_p" min="0" max="1" value="0.7" step="0.05" />
@@ -312,7 +330,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                             <label for="enableLongReply" class="switch-slide-label"></label>
                         </label>
                     </div>
-                    <div class="setDetail inputDetail apiDetail">
+                     <div class="setDetail inputDetail apiDetail">
                         <div id="checkBillBtn" class="loaded">
                             <span>查询API额度</span>
                             <svg style="margin:0 auto;height:34px;width:100%;">
@@ -320,18 +338,18 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                             </svg>
                         </div>
                     </div>
-                <div class="setContent" id="quotaContent" style="display: none;">
-                    <div class="setTitle" id="quotaTitle">免费额度</div>
-                    <div class="setDetail">
-                        <div class="progressBar">
-                            <div class="nowProgress" id="usedQuotaBar"></div>
-                        </div>
-                        <div class="progressDetail">
-                            <div><span>已用 </span><span id="usedQuota"></span></div>
-                            <div><span>可用 </span><span id="availableQuota"></span></div>
-                        </div>
-                    </div>
-                </div>
+                   <div class="setContent" id="quotaContent" style="display: none;">
+                       <div class="setTitle" id="quotaTitle">免费额度</div>
+                           <div class="setDetail">
+                                  <div class="progressBar">
+                                      <div class="nowProgress" id="usedQuotaBar"></div>
+                                  </div>
+                                  <div class="progressDetail">
+                                  <div><span>已用 </span><span id="usedQuota"></span></div>
+                                  <div><span>可用 </span><span id="availableQuota"></span></div>
+                           </div>
+                       </div>
+                 </div>
 
                 </div>
                 <div id="speechOption" style="display: none;">
@@ -495,9 +513,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
             </div>
             <div class="sysTitle">设置</div>
             <div class="sysDetail">
-               
-
-
+				
                 <div class="setContent">
                     <div class="setTitle">会话</div>
                     <div class="setDetail dataDetail">
@@ -607,6 +623,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
         const settingEle = document.getElementById("setting");
         const dialogEle = document.getElementById("setDialog");
 
+        const systemEle = document.getElementById("systemInput");
         const speechServiceEle = document.getElementById("preSetService");
         const newChatEle = document.getElementById("newChat");
         const folderListEle = document.getElementById("folderList");
@@ -921,7 +938,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                     if (azureTokenTimer) {
                         clearInterval(azureTokenTimer);
                     }
-                    checkAzureAbort = new AbortController();
+					
                     setTimeout(() => {
                         if (checkAzureAbort && !checkAzureAbort.signal.aborted) {
                             checkAzureAbort.abort();
@@ -1331,12 +1348,12 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
         const API_URL = "v1/chat/completions";
         let loading = false;
         let presetRoleData = {
-            "normal": "你是一个乐于助人的专业助手，尽量简明扼要地回答",
+            "normal": "<%=sysrole%>",
             "cat": "你是一个可爱的猫娘，每句话结尾都要带个'喵'",
             "emoji": "你的性格很活泼，每句话中都要有至少一个emoji图标",
             "image": "当你需要发送图片的时候，请用 markdown 语言生成，不要反斜线，不要代码框，需要使用 unsplash API时，遵循一下格式， https://source.unsplash.com/960x640/? ＜英文关键词＞"
         };
-        let modelVersion = "<%=modelver%>"; ; // 模型版本
+        let modelVersion = "<%=modelver%>"; // 模型版本
         let apiHost = "<%=apihosts%>"; // api反代地址
         let customAPIKey = "<%=apikeys%>"; // 自定义apiKey
         let systemRole; // 自定义系统角色
@@ -2216,9 +2233,11 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
             }
             if (data[0] && data[0].role === "system") {
                 systemRole = data[0].content;
+                systemEle.value = systemRole;
                 localStorage.setItem("system", systemRole);
             } else {
                 systemRole = "";
+                systemEle.value = "";
                 localStorage.setItem("system", systemRole);
             }
             chatlog.innerHTML = "";
@@ -2507,7 +2526,52 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
             if (editingIdx !== void 0) editingIdx += plus;
         }
         const initSetting = (force = false) => {
-
+            modelVersion = "<%=modelver%>" || "gpt-3.5-turbo";
+            apiHost = "<%=apihosts%>";
+			customAPIKey = "<%=apikeys%>";
+			userAvatar = "<%=userpic%>" || "/luci-static/chatgpt-web/user/girl.jpg";
+            let localSystem = localStorage.getItem("system");
+            systemEle.onchange = () => {
+                systemRole = systemEle.value;
+                localStorage.setItem("system", systemRole);
+                if (systemRole) {
+                    if (data[0] && data[0].role === "system") {
+                        data[0].content = systemRole;
+                    } else {
+                        data.unshift({role: "system", content: systemRole});
+                        processIdx(1);
+                    }
+                } else if (data[0] && data[0].role === "system") {
+                    data.shift();
+                    processIdx(-1);
+                }
+                updateChats();
+            }
+            if (systemRole === void 0) {
+                if (localSystem) {
+                    systemRole = localSystem;
+                    systemEle.value = localSystem;
+                    data.unshift({role: "system", content: systemRole});
+                    processIdx(1);
+                    updateChats();
+                } else {
+                    systemRole = systemEle.value;
+                }
+            } else if (force) {
+                systemRole = systemEle.value = localSystem || systemEle.getAttribute("value") || "";
+                systemEle.dispatchEvent(new Event("change"));
+            }
+            const preEle = document.getElementById("preSetSystem");
+            preEle.onchange = () => {
+                let val = preEle.value;
+                if (val && presetRoleData[val]) {
+                    systemEle.value = presetRoleData[val];
+                } else {
+                    systemEle.value = "";
+                }
+                systemEle.dispatchEvent(new Event("change"));
+                systemEle.focus();
+            }
             const topEle = document.getElementById("top_p");
             let localTop = localStorage.getItem("top_p");
             topEle.value = roleNature = parseFloat(localTop || topEle.getAttribute("value"));
@@ -3087,14 +3151,14 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
             controllerId = setTimeout(() => {
                 notyf.error("请求超时，请稍后重试！");
                 stopLoading();
-            }, 30000);
+            }, 60000);
             let headers = {"Content-Type": "application/json"};
             if (customAPIKey) headers["Authorization"] = "Bearer " + customAPIKey;
             let isRefresh = refreshIdx !== void 0;
             if (isRefresh) {
                 currentResEle = chatlog.children[systemRole ? refreshIdx - 1 : refreshIdx];
             } else if (!currentResEle) {
-                currentResEle = createConvEle("response", true, modelVersion);
+                currentResEle = createConvEle("response");
                 currentResEle.children[1].innerHTML = "<br />";
                 currentResEle.dataset.loading = true;
                 scrollToBottom();
@@ -3121,12 +3185,6 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                 if (systemRole) {dataSlice.unshift(data[0]);}
             }
             try {
-                dataSlice = dataSlice.map(item => {
-                    if (item.role === "assistant") return {role: item.role, content: item.content};
-                    else return item;
-                })
-                let headers = {"Content-Type": "application/json"};
-                if (customAPIKey) headers["Authorization"] = "Bearer " + customAPIKey;
 			
                 const res = await fetch(apiHost + API_URL, {
                     method: "POST",
@@ -3213,7 +3271,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                                 if (longReplyFlag) return streamGen(true);
                             } else {
                                 if (long) {data[data.length - 1].content = progressData}
-                                else {data.push({role: "assistant", content: progressData, model: modelVersion})}
+                                else {data.push({role: "assistant", content: progressData})}
                                 if (longReplyFlag) return streamGen(true);
                             }
                             stopLoading(false);
@@ -3243,7 +3301,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                 if (delayId) clearTimeout(delayId);
                 if (refreshIdx !== void 0) {data[refreshIdx].content = progressData}
                 else if (data[data.length - 1].role === "assistant") {data[data.length - 1].content = progressData}
-                else {data.push({role: "assistant", content: progressData, model: modelVersion})}
+                else {data.push({role: "assistant", content: progressData})}
                 if (existVoice && enableAutoVoice && currentVoiceIdx === autoVoiceDataIdx && progressData.length) {
                     let voiceText = progressData.slice(autoVoiceIdx);
                     autoSpeechEvent(voiceText, currentResEle, false, true);
@@ -3276,8 +3334,8 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                         if (currentVoiceIdx !== void 0) {
                             if (currentVoiceIdx > idx) {currentVoiceIdx++}
                         }
-                        data.splice(idx + 1, 0, {role: "assistant", content: "", model: modelVersion});
-                        chatlog.insertBefore(createConvEle("response", false, modelVersion), chatlog.children[eleIdx + 1]);
+                        data.splice(idx + 1, 0, {role: "assistant", content: ""});
+                        chatlog.insertBefore(createConvEle("response", false), chatlog.children[eleIdx + 1]);
                     }
                     chatlog.children[eleIdx + 1].children[1].innerHTML = "<br />";
                     chatlog.children[eleIdx + 1].dataset.loading = true;
@@ -3340,6 +3398,26 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
     <link href="/luci-static/chatgpt-web/katex.min.css" rel="stylesheet">
     <link href="/luci-static/chatgpt-web/texmath.css" rel="stylesheet">
 
+    <script defer>
+        const downRoleController = new AbortController();
+        setTimeout(() => {
+            downRoleController.abort();
+        }, 10000);
+        const preEle = document.getElementById("preSetSystem");
+        fetch("/luci-static/chatgpt-web/prompts-zh.json", {
+            signal: downRoleController.signal
+        }).then(async (response) => {
+            let res = await response.json();
+            for (let i = 0; i < res.length; i++) {
+                let key = "act" + i;
+                presetRoleData[key] = res[i].prompt.trim();
+                let optionEle = document.createElement("option");
+                optionEle.text = res[i].act;
+                optionEle.value = key;
+                preEle.options.add(optionEle);
+            }
+        }).catch(e => { })
+    </script>
 </body>
 
 </div>
