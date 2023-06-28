@@ -389,6 +389,37 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                             <select id="preSetSpeech">
                             </select>
                         </div>
+                            <div>
+                                <div class="justSetLine">
+                                    <input class="inputTextClass" id="testVoiceText" value="你好，很高兴认识你。" />
+                                </div>
+                                <div class="justSetLine readyTestVoice" id="testVoiceBtn" style="margin-top: 6px;">
+                                    <div class="justSetBtn" onclick="startTestVoice()">
+                                        <svg width="18" height="18">
+                                            <use xlink:href="#readyVoiceIcon" />
+                                        </svg>
+                                        <span>播放</span>
+                                    </div>
+                                    <div class="justSetBtn" onclick="pauseTestVoice()">
+                                        <svg width="18" height="18">
+                                            <use xlink:href="#pauseVoiceIcon" />
+                                        </svg>
+                                        <span>暂停</span>
+                                    </div>
+                                    <div class="justSetBtn" onclick="resumeTestVoice()">
+                                        <svg width="18" height="18">
+                                            <use xlink:href="#resumeVoiceIcon" />
+                                        </svg>
+                                        <span>继续</span>
+                                    </div>
+                                    <div class="justSetBtn" style="margin-right: 130px" onclick="stopTestVoice()">
+                                        <svg width="18" height="18">
+                                            <use xlink:href="#stopIcon" />
+                                        </svg>
+                                        <span>停止</span>
+                                    </div>
+                                </div>
+                            </div>
                         <div class="justSetLine presetSelect" id="azureExtra" style="display:none;">
                             <div class="presetModelCls">
                                 <label for="preSetVoiceStyle">风格</label>
@@ -634,6 +665,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
         let voiceType = 1; // 设置 0: 提问语音，1：回答语音
         let voiceRole = []; // 语音
         let voiceVolume = []; //音量
+        let voiceTestText; // 测试语音文本
         let voiceRate = []; // 语速
         let voicePitch = []; // 音调
         let enableContVoice; // 连续朗读
@@ -1319,6 +1351,13 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                     }
                 };
             };
+            const voiceTestEle = document.getElementById("testVoiceText");
+            let localTestVoice = localStorage.getItem("voiceTestText");
+            voiceTestText = voiceTestEle.value = localTestVoice || voiceTestEle.getAttribute("value");
+            voiceTestEle.oninput = () => {
+                voiceTestText = voiceTestEle.value;
+                localStorage.setItem("voiceTestText", voiceTestText);
+            }
             const contVoiceEle = document.getElementById("enableContVoice");
             let localCont = localStorage.getItem("enableContVoice");
             contVoiceEle.checked = enableContVoice = (localCont || contVoiceEle.getAttribute("checked")) === "true";
@@ -2465,7 +2504,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                 activeChat(chatListEle.firstElementChild);
             }
         };
-        let localSetKeys = ['modelVersion', 'system', 'temp', 'top_p', 'textSpeed', 'enableCont', 'enableLongReply', 'existVoice', 'azureRegion', 'azureKey', 'enableContVoice', 'enableAutoVoice', 'voiceRecLang', 'pinNav', 'voice0', 'voicePitch0', 'voiceVolume0', 'voiceRate0', 'azureRole0', 'azureStyle0', 'voice1', 'voicePitch1', 'voiceVolume1', 'voiceRate1', 'azureRole1', 'azureStyle1'];
+        let localSetKeys = ['modelVersion', 'system', 'temp', 'top_p', 'textSpeed', 'enableCont', 'enableLongReply', 'existVoice','voiceTestText', 'azureRegion', 'azureKey', 'enableContVoice', 'enableAutoVoice', 'voiceRecLang', 'pinNav', 'voice0', 'voicePitch0', 'voiceVolume0', 'voiceRate0', 'azureRole0', 'azureStyle0', 'voice1', 'voicePitch1', 'voiceVolume1', 'voiceRate1', 'azureRole1', 'azureStyle1'];
         document.getElementById("exportSet").onclick = () => {
             let data = {}
             for (let i = 0; i < localSetKeys.length; i++) {
@@ -2505,6 +2544,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
             if (confirmAction("是否还原所有设置为默认值?")) {
                 endAll();
                 let data = {};
+                if (existVoice === 3) localStorage.removeItem(azureRegion + "voiceData");
                 for (let i = 0; i < localSetKeys.length; i++) {
                     let key = localSetKeys[i];
                     let val = localStorage.removeItem(key);
@@ -2632,6 +2672,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                 dialogEle.style.display = "none";
                 document.removeEventListener("mousedown", closeEvent, true);
                 settingEle.classList.remove("showSetting");
+                stopTestVoice();
             }
         }
         settingEle.onmousedown = () => {
@@ -2809,8 +2850,20 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                             let blob = new Blob(downQuene[uuid]["blob"], {type: voiceMIME});
                             let key = downQuene[uuid]["key"];
                             let name = downQuene[uuid]["name"];
+                            if (blob.size === 0) {
+                                notyf.open({
+                                    type: "warning",
+                                    message: "当前语音无法合成此消息，请选择其他语音或消息！"
+                                });
+                                return;
+                            }
                             voiceData[key] = blob;
-                            downBlob(blob, name.slice(0, 16) + ".mp3");
+                            if (downQuene[uuid]["isTest"]) {
+                                testVoiceBlob = blob;
+                                playTestAudio();
+                            } else {
+                                downBlob(blob, name.slice(0, 16) + ".mp3");
+                            }
                         }
                     }
                     downSocket.onerror = () => {
@@ -2821,6 +2874,101 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                 }
             })
         }
+        let testVoiceBlob;
+        let testVoiceIns;
+        const playTestAudio = () => {
+            if (existVoice >= 2) {
+                if (!testVoiceIns || testVoiceIns instanceof Audio === false) {
+                    testVoiceIns = new Audio();
+                    testVoiceIns.onended = testVoiceIns.onerror = () => {
+                        stopTestVoice();
+                    }
+                }
+                testVoiceIns.src = URL.createObjectURL(testVoiceBlob);
+                testVoiceIns.play();
+            } else if (supportSpe) {
+                speechSynthesis.speak(testVoiceIns);
+            }
+        }
+        const pauseTestVoice = () => {
+            if (testVoiceIns) {
+                if (testVoiceIns && testVoiceIns instanceof Audio) {
+                    testVoiceIns.pause();
+                } else if (supportSpe) {
+                    speechSynthesis.pause();
+                }
+            }
+            testVoiceBtn.className = "justSetLine resumeTestVoice";
+        }
+        const resumeTestVoice = () => {
+            if (testVoiceIns) {
+                if (testVoiceIns && testVoiceIns instanceof Audio) {
+                    testVoiceIns.play();
+                } else if (supportSpe) {
+                    speechSynthesis.resume();
+                }
+            }
+            testVoiceBtn.className = "justSetLine pauseTestVoice";
+        }
+        const stopTestVoice = () => {
+            if (testVoiceIns) {
+                if (testVoiceIns instanceof Audio) {
+                    testVoiceIns.pause();
+                    testVoiceIns.currentTime = 0;
+                    URL.revokeObjectURL(testVoiceIns.src);
+                    testVoiceIns.removeAttribute("src");
+                } else if (supportSpe) {
+                    speechSynthesis.cancel();
+                }
+            }
+            testVoiceBtn.className = "justSetLine readyTestVoice";
+        }
+        const startTestVoice = async () => {
+            testVoiceBtn.className = "justSetLine pauseTestVoice";
+            let volume = voiceVolume[voiceType];
+            let rate = voiceRate[voiceType];
+            let pitch = voicePitch[voiceType];
+            let content = voiceTestText;
+            if (existVoice >= 2) {
+                let voice = existVoice === 3 ? voiceRole[voiceType].ShortName : voiceRole[voiceType].Name;
+                let style = azureStyle[voiceType];
+                let role = azureRole[voiceType];
+                let key = content + voice + volume + rate + pitch + (style ? style : "") + (role ? role : "");
+                let blob = voiceData[key];
+                if (blob) {
+                    testVoiceBlob = blob;
+                    playTestAudio();
+                } else {
+                    await initDownSocket();
+                    let currDate = getTime();
+                    let lang = voiceRole[voiceType].lang;
+                    let uuid = uuidv4();
+                    if (existVoice === 3) {
+                        downSocket.send(getWSPre(currDate, uuid));
+                    }
+                    downSocket.send(getWSAudio(currDate, uuid));
+                    downSocket.send(getWSText(currDate, uuid, lang, voice, volume, rate, pitch, style, role, content));
+                    downSocket["pending"] = true;
+                    downQuene[uuid] = {};
+                    downQuene[uuid]["name"] = content;
+                    downQuene[uuid]["key"] = key;
+                    downQuene[uuid]["isTest"] = true;
+                    downQuene[uuid]["blob"] = [];
+                }
+            } else {
+                testVoiceIns = new SpeechSynthesisUtterance();
+                testVoiceIns.onend = testVoiceIns.onerror = () => {
+                    stopTestVoice();
+                }
+                testVoiceIns.voice = voiceRole[voiceType];
+                testVoiceIns.volume = volume;
+                testVoiceIns.rate = rate;
+                testVoiceIns.pitch = pitch;
+                testVoiceIns.text = content;
+                playTestAudio();
+            }
+        }
+
         const downloadAudio = async (idx) => {
             if (existVoice < 2) {
                 return;
@@ -2862,8 +3010,13 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                         bufArray.push(e.data.slice(130));
                     } else if (e.data.indexOf("Path:turn.end") !== -1) {
                         voiceSocket["pending"] = false;
-                        voiceData[key] = new Blob(bufArray, {type: voiceMIME});
-                        res(voiceData[key]);
+                        if (!(bufArray.length === 1 && bufArray[0].byteLength === 0)) {
+                            voiceData[key] = new Blob(bufArray, {type: voiceMIME});
+                            res(voiceData[key]);
+                        } else {
+                            res(new Blob());
+                        }
+
                     }
                 }
             })
@@ -2903,7 +3056,8 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
             let style = azureStyle[type];
             let role = azureRole[type];
             if (existVoice >= 2) {
-                if (!voiceIns) {
+
+                if (!voiceIns || voiceIns instanceof Audio === false) {
                     voiceIns = new Audio();
                     voiceIns.onpause = pauseEv;
                     voiceIns.onplay = resumeEv;
@@ -2927,6 +3081,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                             if (speechQuene.length) {
                                 let buf = speechQuene.shift();
                                 if (buf["end"]) {
+                                    if (!sourceBuffer.buffered.length) notyf.open({type: "warning", message: "当前语音无法合成此消息，请选择其他语音或消息！"});
                                     mediaSource.endOfStream();
                                 } else {
                                     speechPushing = true;
@@ -2942,6 +3097,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                                 speechQuene.push(buf);
                             } else if (e.data.indexOf("Path:turn.end") !== -1) {
                                 voiceSocket["pending"] = false;
+                                if (!(bufArray.length === 1 && bufArray[0].byteLength === 0)) voiceData[key] = new Blob(bufArray, {type: voiceMIME});
                                 voiceData[key] = new Blob(bufArray, {type: voiceMIME});
                                 if (!speechQuene.length && !speechPushing) {
                                     mediaSource.endOfStream();
@@ -2981,6 +3137,7 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
             }
             await speakEvent(voiceIns);
             if (enableContVoice) {
+                if (blob.size === 0) notyf.open({type: "warning", message: "当前语音无法合成此消息，请选择其他语音或消息！"});
                 if (currentVoiceIdx !== data.length - 1) {return speechEvent(currentVoiceIdx + 1)}
                 else {endSpeak()}
             }
@@ -3050,6 +3207,8 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
                                     } else {
                                         voiceBlobURLQuene.push(blobURL);
                                     }
+                                } else {
+                                    notyf.open({type: "warning", message: "当前语音无法合成此消息，请选择其他语音或消息！"});
                                 }
                                 autoAddQuene();
                             }

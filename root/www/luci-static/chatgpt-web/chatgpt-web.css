@@ -191,23 +191,44 @@
         }
 
         #chatlog>div {
-            padding: 18px 30px 18px 54px;
+            padding: 18px 40px 18px 54px;
         }
 
         .chatAvatar {
             position: absolute;
-            top: 14px;
-            left: 13px;
             width: 30px;
             height: 30px;
             border-radius: 2px;
         }
 
+        .request>.chatAvatar {
+            top: 14px;
+            right: 53px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
         .response>.chatAvatar {
             background: #10a37f;
+
             top: 18px;
+
+            left: 13px;
+            margin-top: 15px;
+            margin-bottom: 15px;
         }
 
+        .response .gpt3Avatar {
+            top: 18px;
+            left: 13px;
+            background: #19c37d;
+        }
+
+        .response .gpt4Avatar {
+            top: 18px;
+            left: 13px;
+            background: #ab68ff;
+        }
+	
         .chatAvatar>img {
             display: block;
             width: 100%;
@@ -227,9 +248,13 @@
             justify-content: center;
         }
 
+        .request>.requestBody {
+            text-align: right;
+            margin: 18px 50px 18px 0px;
+        }
         .requestBody {
             white-space: pre-wrap;
-            margin: 18px 0;
+            margin: 18px;
             flex: 1;
         }
 
@@ -705,7 +730,7 @@ border-radius: 4px;
             position: absolute;
             right: 0px;
             top: 0;
-            width: 30px;
+            width: 50px;
             height: 100%;
             pointer-events: none;
         }
@@ -729,10 +754,11 @@ border-radius: 4px;
 
         .optionItems {
             position: absolute;
-            bottom: -12px;
+            bottom: -5px;
             display: flex;
             justify-content: space-between;
-            visibility: hidden;
+
+            visibility: visible;
             z-index: 1;
             color: #808080;
         }
@@ -770,7 +796,7 @@ border-radius: 4px;
         .voiceCls {
             position: relative;
             height: 100%;
-            visibility: hidden;
+            visibility: visible;
             display: flex;
             align-items: center;
         }

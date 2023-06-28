@@ -7,8 +7,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-chatgpt
-PKG_VERSION:=1.1.2
-PKG_RELEASE:=12
+PKG_VERSION:=1.1.3
+PKG_RELEASE:=14
 
 LUCI_TITLE:=LuCI Support for chatgpt-web Client
 LUCI_PKGARCH:=all
