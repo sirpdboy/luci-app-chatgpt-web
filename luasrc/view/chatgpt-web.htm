@@ -13,8 +13,7 @@ local userpic = "/luci-static/chatgpt-web/user/" .. uci:get_first('chatgpt-web',
 local sysrole = uci:get_first('chatgpt-web', 'basic', 'systemrole')
 
 -%>
-
-<%+header%>
+<%+cbi/valueheader%>
 <div class="cbi-map"> 
     <link href="/luci-static/chatgpt-web/chatgpt-web.css" rel="stylesheet">
 
@@ -3576,4 +3575,4 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
 </body>
 
 </div>
-<%+footer%>
+<%+cbi/valuefooter%>
