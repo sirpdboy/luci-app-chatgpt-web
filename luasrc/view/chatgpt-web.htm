@@ -2566,10 +2566,6 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
             if (editingIdx !== void 0) editingIdx += plus;
         }
         const initSetting = (force = false) => {
-            modelVersion = "<%=modelver%>" || "gpt-3.5-turbo";
-            apiHost = "<%=apihosts%>";
-			customAPIKey = "<%=apikeys%>";
-			userAvatar = "<%=userpic%>" || "/luci-static/chatgpt-web/user/girl.jpg";
             let localSystem = localStorage.getItem("system");
             systemEle.onchange = () => {
                 systemRole = systemEle.value;
