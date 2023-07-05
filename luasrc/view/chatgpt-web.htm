@@ -3,9 +3,7 @@
  Licensed to the public under the Apache License 2.0.
 -%>
 <%
-local fs = require "nixio.fs"
-local dsp=require"luci.dispatcher"
-local uci=luci.model.uci.cursor()
+local uci = require "luci.model.uci".cursor()
 local apihosts = uci:get_first('chatgpt-web', 'basic', 'apiHost')
 local apikeys = uci:get_first('chatgpt-web', 'basic', 'apikey')
 local modelver = uci:get_first('chatgpt-web', 'basic', 'modelver')
@@ -13,8 +11,10 @@ local userpic = "/luci-static/chatgpt-web/user/" .. uci:get_first('chatgpt-web',
 local sysrole = uci:get_first('chatgpt-web', 'basic', 'systemrole')
 
 -%>
-<%+cbi/valueheader%>
+<%+header%>
+
 <div class="cbi-map"> 
+<fieldset class="cbi-section">
     <link href="/luci-static/chatgpt-web/chatgpt-web.css" rel="stylesheet">
 
 <body>
@@ -3573,6 +3573,8 @@ L20.4018 25.4983L16.071 22.9985V17.9991Z">
         }).catch(e => { })
     </script>
 </body>
+</fieldset>
 
 </div>
-<%+cbi/valuefooter%>
+
+<%+footer%>
