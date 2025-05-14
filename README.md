@@ -120,11 +120,11 @@ luci-app-chatgpt 在OPENWRT上实现ChatGPT项目，基于OpenAI API
 
 ## 界面
 
-![screenshots](./doc/chatgpd1.png)
+![screenshots](./doc/chatgpt1.png)
 
-![screenshots](./doc/chatgpd2.png)
+![screenshots](./doc/chatgpt2.png)
 
-![screenshots](./doc/chatgpd3.png)
+![screenshots](./doc/chatgpt3.png)
 
 
 ## 使用与授权相关说明
